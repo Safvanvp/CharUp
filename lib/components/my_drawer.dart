@@ -1,3 +1,4 @@
+import 'package:chatup/pages/my_ai_page.dart';
 import 'package:chatup/services/auth/auth_service.dart';
 import 'package:chatup/pages/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +95,24 @@ class _MyDrawerState extends State<MyDrawer> {
                       )),
                   onTap: () {
                     Navigator.pop(context);
+                  },
+                ),
+              ),
+
+              //my ai tile
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: ListTile(
+                  leading: Icon(Icons.android,
+                      color: Theme.of(context).colorScheme.primary),
+                  title: Text('MY AI',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      )),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MyAiPage()));
                   },
                 ),
               ),
