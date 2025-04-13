@@ -1,6 +1,7 @@
 import 'package:chatup/components/my_drawer.dart';
 import 'package:chatup/components/user_tile.dart';
 import 'package:chatup/pages/chat_page.dart';
+import 'package:chatup/pages/chat_ai.dart';
 import 'package:chatup/services/auth/auth_service.dart';
 import 'package:chatup/services/chat/chat_service.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChatAi(),
+            ),
+          );
+        },
+        child: const Icon(Icons.chat),
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,

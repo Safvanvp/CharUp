@@ -28,10 +28,10 @@ class LoginPage extends StatelessWidget {
       //catch any errors
     } catch (e) {
       showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(e.toString()),
-        ));
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(e.toString()),
+              ));
     }
   }
 
@@ -39,18 +39,19 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: 
-      Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Icon(
-              Icons.message,
-              size: 60,
-              color: Theme.of(context).colorScheme.primary,
+            Container(
+              height: 250,
+              width: 250,
+              child: Image.asset(
+                'Images/logo.png',
+              ),
             ),
-            SizedBox(height: 50),
+
             //wellcome text
             Text("Welcome back, you've been missed!",
                 style: TextStyle(

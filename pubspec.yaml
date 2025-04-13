@@ -20,11 +20,17 @@ dependencies:
   firebase_auth: 
   cloud_firestore: 
   provider: 
-  # flutter_login:
-  # google_sign_in:
   intl: 
   image_picker: 
   http:
+  google_generative_ai:
+  flutter_launcher_icons:
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "Images/icon.png"
+  remove_alpha_ios: true
 
 dev_dependencies:
   flutter_test:

@@ -51,7 +51,7 @@ class MyDetailsCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.asset(
-                      'Images/image.jpg',
+                      'Images/iage.jpg',
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,

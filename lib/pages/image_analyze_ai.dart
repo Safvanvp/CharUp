@@ -4,14 +4,14 @@ import 'package:chatup/services/bot/claude_ai_services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MyAiPage extends StatefulWidget {
-  const MyAiPage({super.key});
+class ImageAnalyzeAi extends StatefulWidget {
+  const ImageAnalyzeAi({super.key});
 
   @override
-  State<MyAiPage> createState() => _MyAiPageState();
+  State<ImageAnalyzeAi> createState() => _ImageAnalyzeAiState();
 }
 
-class _MyAiPageState extends State<MyAiPage> {
+class _ImageAnalyzeAiState extends State<ImageAnalyzeAi> {
   //variable and stuffs
 
   File? _image;

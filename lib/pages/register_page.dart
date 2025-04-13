@@ -47,12 +47,14 @@ class RegisterPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Icon(
-              Icons.message,
-              size: 60,
-              color: Theme.of(context).colorScheme.primary,
+            Container(
+              height: 250,
+              width: 250,
+              child: Image.asset(
+                'Images/logo.png',
+              ),
             ),
-            SizedBox(height: 50),
+
             //wellcome text
             Text("Let's create an account for you!",
                 style: TextStyle(

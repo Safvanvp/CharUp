@@ -147,7 +147,11 @@ class ChatBubble extends StatelessWidget {
               isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              margin: EdgeInsets.only(
+                top: 10,
+                left: isCurrentUser ? 60 : 10,
+                right: isCurrentUser ? 10 : 60,
+              ),
               padding: EdgeInsets.only(
                 top: 5,
                 bottom: 5,

@@ -1,4 +1,5 @@
-import 'package:chatup/pages/my_ai_page.dart';
+import 'package:chatup/pages/image_analyze_ai.dart';
+import 'package:chatup/pages/chat_ai.dart';
 import 'package:chatup/services/auth/auth_service.dart';
 import 'package:chatup/pages/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -101,19 +102,54 @@ class _MyDrawerState extends State<MyDrawer> {
 
               //my ai tile
               Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: ListTile(
-                  leading: Icon(Icons.android,
+                padding: const EdgeInsets.only(left: 20, right: 10),
+                child: ExpansionTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                  leading: Icon(Icons.memory_outlined,
                       color: Theme.of(context).colorScheme.primary),
-                  title: Text('MY AI',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      )),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyAiPage()));
-                  },
+                  title: Text(
+                    'AI TOOLS',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.chat_bubble_outline,
+                          color: Theme.of(context).colorScheme.primary),
+                      title: Text('Chat AI',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ChatAi()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.image_search_outlined,
+                          color: Theme.of(context).colorScheme.primary),
+                      title: Text('Image Analyze AI',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ImageAnalyzeAi()),
+                        );
+                      },
+                    ),
+                    // Add more tools in future here
+                  ],
                 ),
               ),
 
