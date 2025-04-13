@@ -97,21 +97,24 @@ class _MyAiPageState extends State<MyAiPage> {
               color: Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: _image != null
-                ? Image.file(
-                    _image!,
-                    fit: BoxFit.cover,
-                  )
-                : const Center(
-                    child: Text(
-                      'Choose an image',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: _image != null
+                  ? Image.file(
+                      _image!,
+                      fit: BoxFit.cover,
+                    )
+                  : const Center(
+                      child: Text(
+                        'Choose an image',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
+            ),
           ),
 
           const SizedBox(
@@ -141,9 +144,31 @@ class _MyAiPageState extends State<MyAiPage> {
                 child: const Text('Choose Photo'),
               ),
             ],
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+
+          //description loading..
+          if (_isLoading)
+            Center(child: const CircularProgressIndicator())
 
           //description
+          else if (_description != null)
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Text(
+                _description!,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
         ],
       ),
     );
