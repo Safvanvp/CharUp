@@ -92,7 +92,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.grey,
+        foregroundColor: Colors.white,
         title: const Text('Edit Details'),
         centerTitle: true,
       ),

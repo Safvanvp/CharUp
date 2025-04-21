@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ClaudeAiServices {
+  //api constants
   final String _baseUrl = 'https://api.anthropic.com/v1/messages';
   final String _apiKeys = 'my api key';
+  final String _apiVersion = '2023-06-01';
+  final String _model = 'claude-3-opus-20240229';
+  // static const int _maxTokens = 1024;
 
-  
   Future<String> analyzeImage(File image) async {
-
     //prepare image for claude
     final bytes = await image.readAsBytes();
     final base64Image = base64Encode(bytes);
@@ -18,10 +20,10 @@ class ClaudeAiServices {
         headers: {
           'contant-type': 'application/json',
           'x-api-key': _apiKeys,
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': _apiVersion,
         },
         body: jsonEncode({
-          'model': 'claude-3-opus-20240229',
+          'model': _model,
           'max_tokens_to_sample': 50,
           'messages': [
             {
@@ -47,7 +49,7 @@ class ClaudeAiServices {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['content'][0]['text']; 
+      return data['content'][0]['text'];
     }
 
     //error...

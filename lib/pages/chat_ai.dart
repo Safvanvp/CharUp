@@ -15,7 +15,7 @@ class _ChatAiState extends State<ChatAi> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        foregroundColor: Colors.grey,
+        foregroundColor: Colors.white,
         title: const Text('Chat AI'),
         backgroundColor: Colors.transparent,
       ),

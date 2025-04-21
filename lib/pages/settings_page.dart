@@ -15,7 +15,7 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.grey,
+        foregroundColor: Colors.white,
         title: const Text('Settings'),
         centerTitle: true,
       ),

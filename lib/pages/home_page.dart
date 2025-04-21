@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.grey,
+        foregroundColor: Colors.white,
         title: const Text('Home'),
         centerTitle: true,
       ),
