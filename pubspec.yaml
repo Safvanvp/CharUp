@@ -26,6 +26,7 @@ dependencies:
   google_generative_ai:
   flutter_launcher_icons:
 
+
 flutter_launcher_icons:
   android: true
   ios: true
