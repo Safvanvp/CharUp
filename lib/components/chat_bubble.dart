@@ -1,4 +1,5 @@
 import 'package:chatup/services/chat/chat_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -57,6 +58,18 @@ class ChatBubble extends StatelessWidget {
               title: const Text('Cancel'),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+
+            //delete message button
+
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Delete'),
+              onTap: () {
+                //delete message
+                Navigator.pop(context);
+                _deleteMessage(context, messageId);
               },
             ),
           ],
@@ -129,6 +142,42 @@ class ChatBubble extends StatelessWidget {
                     child: Text('Block')),
               ],
             ));
+  }
+
+  //delete message
+
+  void _deleteMessage(BuildContext context, String messageId) {
+    final currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    final List<String> ids = [
+      currentUserID,
+      userId
+    ]; // userId is the receiver/sender
+    ids.sort();
+    final chatRoomId = ids.join('_');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Message'),
+        content: Text('Are you sure you want to delete this message?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ChatService().deleteMessage(chatRoomId, messageId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Message deleted')),
+              );
+            },
+            child: Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

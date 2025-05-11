@@ -36,6 +36,44 @@ class ChatService extends ChangeNotifier {
     });
   }
 
+  
+
+  //order by last message
+
+  Stream<List<Map<String, dynamic>>> getUsersWithLastMessageAndUnread(String currentUserId) {
+  return _firestore
+      .collection('chat_rooms')
+      .orderBy('lastMessageTime', descending: true)
+      .snapshots()
+      .asyncMap((snapshot) async {
+    List<Map<String, dynamic>> userList = [];
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final participants = data['users'] as List<dynamic>;
+
+      if (!participants.contains(currentUserId)) continue;
+
+      final otherUserId = participants.firstWhere((id) => id != currentUserId);
+      final userDoc = await _firestore.collection('Users').doc(otherUserId).get();
+      final userData = userDoc.data();
+
+      if (userData == null) continue;
+
+      userList.add({
+        'uid': otherUserId,
+        'name': userData['name'],
+        'email': userData['email'],
+        'lastMessage': data['lastMessage'],
+        'unread': (data['unreadMessages']?[userData['email']] ?? 0) > 0,
+      });
+    }
+
+    return userList;
+  });
+}
+
+
   //get users only i share chatroom with
 
   Stream<List<Map<String, dynamic>>> getSharedChatrooms(
@@ -77,43 +115,48 @@ class ChatService extends ChangeNotifier {
     });
   }
 
+  //generate chatroom id
+  String generateChatRoomId(String userEmail1, String userEmail2) {
+  List<String> sortedEmails = [userEmail1, userEmail2]..sort();
+  return '${sortedEmails[0]}_${sortedEmails[1]}';
+}
+
+
+
   //get only user who are not blocked and chatroom with current user
+
+  Future<void> markMessagesAsRead(String chatRoomId, String userEmail) async {
+  final docRef = FirebaseFirestore.instance.collection('chat_rooms').doc(chatRoomId);
+  await docRef.update({
+    'unreadMessages.$userEmail': 0,
+  });
+}
+
 
   //send message
 
-  Future<void> sendMessage(String receiverID, message) async {
-    //get current user info
+  Future<void> sendMessage({
+  required String chatRoomId,
+  required Message message,
+}) async {
+  final docRef = FirebaseFirestore.instance.collection('chat_rooms').doc(chatRoomId);
 
-    final String currentUserID = _auth.currentUser!.uid;
-    final String currentUserEmail = _auth.currentUser!.email!;
-    final Timestamp timestamp = Timestamp.now();
+  // Add message to messages subcollection
+  await docRef.collection('messages').add(message.toMap());
 
-    //create a new message
+  final chatRoomSnapshot = await docRef.get();
+  final chatRoomData = chatRoomSnapshot.data()!;
+  final users = List<String>.from(chatRoomData['users']);
+  final receiverEmail = users.firstWhere((email) => email != message.senderEmail);
 
-    Message newMessage = Message(
-      senderID: currentUserID,
-      senderEmail: currentUserEmail,
-      receiverID: receiverID,
-      message: message,
-      timestamp: timestamp,
-    );
+  // Update last message + unread counts
+  await docRef.update({
+    'lastMessage': message.message,
+    'lastMessageTime': message.timestamp,
+    'unreadMessages.$receiverEmail': FieldValue.increment(1),
+  });
+}
 
-    //construct chatroom id for the two users(sorted to ensure uniqueness)
-
-    List<String> ids = [currentUserID, receiverID];
-    ids.sort();
-    String chatRoomID = ids.join('_');
-
-    //add new message to database
-
-    await _firestore
-        .collection('chat_rooms')
-        .doc(chatRoomID)
-        .collection('messages')
-        .add(
-          newMessage.toMap(),
-        );
-  }
 
   //get messages
 
@@ -166,6 +209,17 @@ class ChatService extends ChangeNotifier {
         .doc(currentUser!.uid)
         .collection('BlockedUsers')
         .doc(blockedUserID)
+        .delete();
+  }
+
+  //delete message
+
+  Future<void> deleteMessage(String roomId, String messageID) async {
+    await _firestore
+        .collection('chat_rooms')
+        .doc(roomId)
+        .collection('messages')
+        .doc(messageID)
         .delete();
   }
 

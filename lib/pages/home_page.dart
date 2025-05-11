@@ -5,6 +5,7 @@ import 'package:chatup/pages/chat_ai.dart';
 import 'package:chatup/services/auth/auth_service.dart';
 import 'package:chatup/services/chat/chat_service.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,6 +27,11 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  //reload
+  Future<void> _reload() async {
+    return await Future.delayed(const Duration(seconds: 1));
+  }
+
   // Build
   @override
   Widget build(BuildContext context) {
@@ -45,7 +51,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Home'),
         centerTitle: true,
       ),
@@ -105,7 +111,8 @@ class _HomePageState extends State<HomePage> {
     final stream = isSearching
         ? _chatService.searchUser(_searchQuery)
         // : _chatService.getSharedChatrooms(_authService.getCurrentUser()!.email!);
-        : _chatService.getUserStreamExcludingBlocked();
+        : _chatService.getUsersWithLastMessageAndUnread(
+            _authService.getCurrentUser()!.uid);
 
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: stream,
@@ -122,10 +129,17 @@ class _HomePageState extends State<HomePage> {
           return const Center(child: Text('No users found.'));
         }
 
-        return ListView(
-          children: users
-              .map((userData) => _buildUserListItem(userData, context))
-              .toList(),
+        return LiquidPullToRefresh(
+          onRefresh: _reload,
+          color: Theme.of(context).colorScheme.secondary,
+          height: 100,
+          animSpeedFactor: 2,
+          showChildOpacityTransition: false,
+          child: ListView(
+            children: users
+                .map((userData) => _buildUserListItem(userData, context))
+                .toList(),
+          ),
         );
       },
     );

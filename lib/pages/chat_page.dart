@@ -1,4 +1,5 @@
 import 'package:chatup/components/chat_bubble.dart';
+import 'package:chatup/models/message.dart';
 import 'package:chatup/services/auth/auth_service.dart';
 import 'package:chatup/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,6 +40,14 @@ class _ChatPageState extends State<ChatPage> {
     });
 
     Future.delayed(Duration(milliseconds: 500), () => scrollDown());
+
+    // You must generate or pass chatRoomId
+    final chatRoomId = _chatService.generateChatRoomId(
+        widget.receiverEmail, _authService.getCurrentUser()!.email!);
+
+    // mark messages as read
+    _chatService.markMessagesAsRead(
+        chatRoomId, _authService.getCurrentUser()!.email!);
   }
 
   @override
@@ -58,15 +67,26 @@ class _ChatPageState extends State<ChatPage> {
 
   //send message
   void sendMessage() async {
-    //if there something in the message field
     if (_messageController.text.isNotEmpty) {
-      //send message
-      await _chatService.sendMessage(
-          widget.receiverID, _messageController.text);
-      //clear the message field
+      final currentUser = _authService.getCurrentUser()!;
+      final timestamp = Timestamp.now();
+      final chatRoomId = _chatService.generateChatRoomId(
+        widget.receiverEmail,
+        _authService.getCurrentUser()!.email!,
+      );
+
+      final message = Message(
+        receiverID: widget.receiverID,
+        senderEmail: currentUser.email!,
+        senderID: currentUser.uid,
+        message: _messageController.text.trim(),
+        timestamp: timestamp,
+      );
+
+      await _chatService.sendMessage(chatRoomId: chatRoomId, message: message);
       _messageController.clear();
+      scrollDown();
     }
-    scrollDown();
   }
 
   @override

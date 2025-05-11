@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 class UserTile extends StatelessWidget {
   final String text;
   final String name;
+  final bool unread;
+  final String? lastMessage;
   final void Function()? onTap;
 
-  const UserTile(
-      {super.key, required this.text, required this.onTap, required this.name});
+  const UserTile({
+    super.key,
+    required this.text,
+    required this.name,
+    this.unread = false,
+    this.lastMessage,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +34,38 @@ class UserTile extends StatelessWidget {
               size: 40,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
-            SizedBox(
-              width: 20,
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      )),
+                  if (lastMessage != null)
+                    Text(
+                      lastMessage!,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                    )),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
+            if (unread)
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
                 ),
-              ],
-            )
+              ),
           ],
         ),
       ),

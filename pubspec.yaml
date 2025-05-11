@@ -25,6 +25,7 @@ dependencies:
   http:
   google_generative_ai:
   flutter_launcher_icons:
+  liquid_pull_to_refresh:
 
 
 flutter_launcher_icons:

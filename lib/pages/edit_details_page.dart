@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ class EditDetailsPage extends StatefulWidget {
 class _EditDetailsPageState extends State<EditDetailsPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
   DateTime? _selectedDOB;
 
   // Calculate age from DOB
@@ -60,11 +60,14 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
       age = calculateAge(_selectedDOB!);
     }
 
+    String bio = _bioController.text.trim();
+
     Map<String, dynamic> updateData = {};
 
     if (phone.isNotEmpty) updateData['phoneNumber'] = phone;
     if (name.isNotEmpty) updateData['name'] = name;
     if (age != null) updateData['age'] = age;
+    if (bio.isNotEmpty) updateData['bio'] = bio;
 
     try {
       await FirebaseFirestore.instance
@@ -100,15 +103,13 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Name Field
-
             const SizedBox(height: 20),
 
             // DOB Picker
             GestureDetector(
               onTap: _pickDate,
               child: Container(
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width,
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 decoration: BoxDecoration(
@@ -126,7 +127,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
             ),
             const SizedBox(height: 20),
             Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
@@ -145,7 +146,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
 
             // Phone Input
             Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
@@ -161,27 +162,50 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+
+            //bio
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.shade400),
+              ),
+              child: TextField(
+                controller: _bioController,
+                minLines: 1,
+                maxLines: null, // allows it to grow as needed
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter your bio',
+                ),
+              ),
+            ),
             const SizedBox(height: 30),
 
             // Update Button
-            Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade400),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  fixedSize: Size.fromWidth(MediaQuery.of(context).size.width),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
-                child: ElevatedButton(
-                    onPressed: _updateDetails,
-                    child: Text(
-                      'Update',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ))),
+                onPressed: _updateDetails,
+                child: Text(
+                  'Update',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )),
             //
           ],
         ),
