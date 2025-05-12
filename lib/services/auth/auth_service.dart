@@ -13,6 +13,8 @@ class AuthService {
     return _auth.currentUser;
   }
 
+  //
+
   //sign in
 
   Future<UserCredential> signInWithEmailPassWord(

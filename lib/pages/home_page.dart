@@ -110,8 +110,7 @@ class _HomePageState extends State<HomePage> {
     final isSearching = _searchQuery.isNotEmpty;
     final stream = isSearching
         ? _chatService.searchUser(_searchQuery)
-        : _chatService.getUsersWithLastMessageAndUnread(
-            _authService.getCurrentUser()!.uid);
+        : _chatService.getUserStreamExcludingBlocked();
 
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: stream,

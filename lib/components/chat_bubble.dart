@@ -17,7 +17,43 @@ class ChatBubble extends StatelessWidget {
     required this.timestamp,
   });
 
-  //show options
+  //show option for yourself
+
+  void showOptionsForYourself(BuildContext context, String messageId) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+            child: Wrap(
+          children: [
+            //delete message button
+
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Delete'),
+              onTap: () {
+                //delete message
+                Navigator.pop(context);
+                _deleteYourMessage(context, messageId);
+              },
+            ),
+
+            //cancel button
+
+            ListTile(
+              leading: const Icon(Icons.cancel),
+              title: const Text('Cancel'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  //show options for chat mate
 
   void showOptions(BuildContext context, String messageId, String userId) {
     showModalBottomSheet(
@@ -144,6 +180,48 @@ class ChatBubble extends StatelessWidget {
             ));
   }
 
+  //delete your message
+
+  void _deleteYourMessage(BuildContext context, String messageId) async {
+    final currentUserEmail = FirebaseAuth.instance.currentUser!.email!;
+    final otherUserEmail = await ChatService().getEmailFromUid(userId);
+
+    if (otherUserEmail == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: Unable to find user email')),
+      );
+      return;
+    }
+
+    final List<String> emails = [currentUserEmail, otherUserEmail];
+    emails.sort();
+    final chatRoomId = emails.join('_');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Message'),
+        content: const Text('Are you sure you want to delete this message?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ChatService().deleteMessage(chatRoomId, messageId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Message deleted')),
+              );
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   //delete message
 
   void _deleteMessage(BuildContext context, String messageId) {
@@ -187,6 +265,8 @@ class ChatBubble extends StatelessWidget {
         if (!isCurrentUser) {
           //show options
           showOptions(context, messageId, userId);
+        } else {
+          showOptionsForYourself(context, messageId);
         }
       },
       child: Container(

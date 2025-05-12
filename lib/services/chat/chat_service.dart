@@ -36,6 +36,20 @@ class ChatService extends ChangeNotifier {
     });
   }
 
+//get current user email
+
+Future<String?> getEmailFromUid(String uid) async {
+  try {
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    if (doc.exists && doc.data()!.containsKey('email')) {
+      return doc['email'];
+    }
+  } catch (e) {
+    print('Error fetching email: $e');
+  }
+  return null;
+}
+
   
 
   //order by last message
