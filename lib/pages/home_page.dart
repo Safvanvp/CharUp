@@ -110,7 +110,6 @@ class _HomePageState extends State<HomePage> {
     final isSearching = _searchQuery.isNotEmpty;
     final stream = isSearching
         ? _chatService.searchUser(_searchQuery)
-        // : _chatService.getSharedChatrooms(_authService.getCurrentUser()!.email!);
         : _chatService.getUsersWithLastMessageAndUnread(
             _authService.getCurrentUser()!.uid);
 
@@ -152,6 +151,7 @@ class _HomePageState extends State<HomePage> {
       return UserTile(
         text: userData['email'],
         name: userData['name'],
+        lastMessage: userData['lastMessage'], // Add last message here
         onTap: () {
           Navigator.push(
             context,
