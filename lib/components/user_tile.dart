@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class UserTile extends StatelessWidget {
   final String text;
   final String name;
+  final String? photoUrl;
   final bool unread;
   final String? lastMessage;
   final void Function()? onTap;
@@ -10,6 +11,7 @@ class UserTile extends StatelessWidget {
   const UserTile({
     super.key,
     required this.text,
+    required this.photoUrl,
     required this.name,
     this.unread = false,
     this.lastMessage,
@@ -29,10 +31,24 @@ class UserTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.person,
-              size: 40,
-              color: Theme.of(context).colorScheme.inversePrimary,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: photoUrl != null
+                  ? Image.network(
+                      photoUrl!,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'Images/3d-black-icon-user-account-person-for-user-interface-website-mobile-apps-free-png.webp',
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : const Icon(Icons.person),
             ),
             const SizedBox(width: 20),
             Expanded(

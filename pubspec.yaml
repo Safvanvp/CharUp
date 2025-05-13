@@ -23,7 +23,7 @@ dependencies:
   intl: 
   image_picker: 
   http:
- 
+  google_sign_in: 
   flutter_launcher_icons:
   liquid_pull_to_refresh:
 

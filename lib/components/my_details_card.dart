@@ -28,7 +28,18 @@ class MyDetailsCard extends StatelessWidget {
           return const Center(child: Text("No data found"));
         }
 
-        final userData = snapshot.data!.data() as Map<String, dynamic>;
+        final userData = snapshot.data!.data() as Map<String, dynamic>?;
+
+        if (userData == null) {
+          return const Center(child: Text("User data is null"));
+        }
+
+        final String photoUrl = userData['photoUrl'] ?? '';
+        final String name = userData['name'] ?? 'N/A';
+        final String email = userData['email'] ?? 'N/A';
+        final String age =
+            (userData['age'] != null) ? userData['age'].toString() : 'N/A';
+        final String phone = userData['phoneNumber'] ?? 'N/A';
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -45,25 +56,22 @@ class MyDetailsCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile Photo
+              // Profile Photo and Edit Button
               Column(
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      'Images/iage.jpg',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'Images/3d-black-icon-user-account-person-for-user-interface-website-mobile-apps-free-png.webp',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
+                    child: photoUrl.isNotEmpty
+                        ? Image.network(
+                            photoUrl,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return fallbackImage();
+                            },
+                          )
+                        : fallbackImage(),
                   ),
                   const SizedBox(height: 20),
                   GestureDetector(
@@ -85,10 +93,7 @@ class MyDetailsCard extends StatelessWidget {
                         children: [
                           Text(
                             'Edit Profile',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                           SizedBox(width: 5),
                           Icon(Icons.edit, color: Colors.white, size: 20),
@@ -98,23 +103,25 @@ class MyDetailsCard extends StatelessWidget {
                   ),
                 ],
               ),
+
               const SizedBox(width: 20),
+
               // Details Column
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     labelText("Name"),
-                    valueText(userData['name'] ?? 'N/A'),
+                    valueText(name),
                     const SizedBox(height: 10),
                     labelText("Email"),
-                    valueText(userData['email'] ?? 'N/A'),
+                    valueText(email),
                     const SizedBox(height: 10),
                     labelText("Age"),
-                    valueText(userData['age']?.toString() ?? 'N/A'),
+                    valueText(age),
                     const SizedBox(height: 10),
                     labelText("Phone"),
-                    valueText(userData['phoneNumber'] ?? 'N/A'),
+                    valueText(phone),
                   ],
                 ),
               ),
@@ -143,6 +150,15 @@ class MyDetailsCard extends StatelessWidget {
         fontSize: 14,
         color: Colors.white,
       ),
+    );
+  }
+
+  Widget fallbackImage() {
+    return Image.asset(
+      'Images/3d-black-icon-user-account-person-for-user-interface-website-mobile-apps-free-png.webp',
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
     );
   }
 }

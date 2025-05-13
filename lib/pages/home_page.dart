@@ -148,6 +148,7 @@ class _HomePageState extends State<HomePage> {
       Map<String, dynamic> userData, BuildContext context) {
     if (userData['email'] != _authService.getCurrentUser()!.email) {
       return UserTile(
+        photoUrl: userData['photoUrl'],
         text: userData['email'],
         name: userData['name'],
         lastMessage: userData['lastMessage'], // Add last message here
@@ -156,6 +157,7 @@ class _HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => ChatPage(
+                // imageUrl: userData['photoUrl'],
                 receiverEmail: userData['email'],
                 receiverName: userData['name'],
                 receiverID: userData['uid'],

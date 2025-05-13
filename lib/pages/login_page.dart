@@ -101,6 +101,65 @@ class LoginPage extends StatelessWidget {
                 )
               ],
             ),
+            SizedBox(height: 20),
+            //or continue with
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 10,
+                  ),
+                ),
+                Text('or continue with',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+                Expanded(
+                  child: Divider(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 10,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 20),
+
+//google button
+            GestureDetector(
+              onTap: () async {
+                final authService = AuthService();
+                try {
+                  final userCredential = await authService.signInWithGoogle();
+                  if (userCredential != null) {
+                    // Navigate to home or update UI
+                  }
+                } catch (e) {
+                  print('Error: $e'); // You can show this in a snackbar/toast
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Image.asset(
+                  'Images/google-icon-512x512-tqc9el3r.png',
+                  height: 50,
+                  width: 50,
+                ),
+              ),
+            )
           ],
         ),
       ),

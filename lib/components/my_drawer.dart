@@ -15,6 +15,7 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   String userName = '';
   String userEmail = '';
+  String userPhoto = '';
 
   final AuthService _authService = AuthService();
 
@@ -34,6 +35,7 @@ class _MyDrawerState extends State<MyDrawer> {
         setState(() {
           userName = doc['name'];
           userEmail = doc['email'];
+          userPhoto = doc['photoUrl'] ?? '';
         });
       }
     }
@@ -57,23 +59,32 @@ class _MyDrawerState extends State<MyDrawer> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.account_circle,
-                      size: 70,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                    userPhoto.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              userPhoto,
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : const CircleAvatar(
+                            radius: 40,
+                            child: Icon(Icons.person),
+                          ),
                     const SizedBox(height: 10),
                     Text(
                       userName.isNotEmpty ? userName : "Loading...",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.inversePrimary,
                       ),
                     ),
                     Text(
                       userEmail.isNotEmpty ? userEmail : "",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
@@ -81,6 +92,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 20),
 
               // Home tile
